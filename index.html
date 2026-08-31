@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games The Shop — Buy PS5, Xbox, Nintendo Switch &amp; PC Games Online in India</title>
+<meta name="description" content="India's home for everything gaming since 2009. Buy PlayStation, Xbox, Nintendo Switch and PC games, consoles, accessories and merchandise online. Free shipping above ₹999.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Chakra+Petch:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   GAMES THE SHOP — board substrate + copper trace + violet rail
+   ============================================================ */
+:root{
+  --board-000:#050807; --board-100:#080d0c; --board-200:#0d1413;
+  --board-300:#131c1a; --board-400:#1a2523;
+  --line:#1d2b28; --line-strong:#2d403c;
+  --silk:#dfe9e6; --silk-dim:#839793; --silk-faint:#5b6b68;
+  --copper:#e2a44c; --copper-hot:#f6c477; --copper-deep:#a86a24;
+  --rail:#a874f5;
+  --ok:#57d99a; --warn:#f0764b;
+  --display:'Orbitron',sans-serif; --body:'Chakra Petch',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --gut:clamp(20px,5vw,72px); --maxw:1280px; --cut:14px;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+/* ---------- crosshair cursor ---------- */
+html,body{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cg fill='none' stroke='%23e2a44c' stroke-width='1.4' stroke-linecap='round'%3E%3Ccircle cx='17' cy='17' r='7.5'/%3E%3Cpath d='M17 1.5v6M17 26.5v6M1.5 17h6M26.5 17h6'/%3E%3C/g%3E%3Ccircle cx='17' cy='17' r='1.6' fill='%23e2a44c'/%3E%3C/svg%3E") 17 17, crosshair;
+}
+a,button,input,select,textarea,label,summary,[role="button"],[tabindex]{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cg fill='none' stroke='%23f6c477' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='17' cy='17' r='10'/%3E%3Cpath d='M17 0v5M17 29v5M0 17h5M29 17h5'/%3E%3C/g%3E%3Ccircle cx='17' cy='17' r='2.4' fill='%23f6c477'/%3E%3C/svg%3E") 17 17, crosshair;
+}
+input[type="text"],input[type="email"],input[type="search"],textarea{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Cg fill='none' stroke='%23dfe9e6' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M17 3v28M12 3h10M12 31h10'/%3E%3C/g%3E%3C/svg%3E") 17 17, text;
+}
+
+body{margin:0;background:var(--board-000);color:var(--silk);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+.board-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.board-bg::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(45,64,60,.30) 1px,transparent 1px),linear-gradient(90deg,rgba(45,64,60,.30) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 0%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 0%,#000 0%,transparent 78%);opacity:.5}
+.board-bg::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(600px 420px at 12% 8%,rgba(226,164,76,.10),transparent 70%),
+             radial-gradient(700px 500px at 88% 26%,rgba(168,116,245,.10),transparent 70%),
+             radial-gradient(900px 700px at 50% 100%,rgba(226,164,76,.05),transparent 70%)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+.page{position:relative;z-index:2}
+
+#reticle{position:fixed;top:0;left:0;width:54px;height:54px;margin:-27px 0 0 -27px;z-index:9999;pointer-events:none;opacity:0;transition:opacity .25s var(--ease),transform .12s var(--ease)}
+#reticle circle,#reticle path{stroke:rgba(226,164,76,.55);fill:none;stroke-width:1}
+#reticle.is-live{opacity:1}
+#reticle.is-hot{transform:scale(1.35) rotate(45deg)}
+#reticle.is-hot circle,#reticle.is-hot path{stroke:rgba(168,116,245,.85)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
+.notch{clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin:0 0 18px;flex-wrap:wrap}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--copper);opacity:.7}
+.eyebrow .ref{color:var(--silk-faint);letter-spacing:.16em}
+
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-.01em;margin:0}
+h2{font-size:clamp(26px,3.4vw,44px)}
+h3{font-size:18px;letter-spacing:.02em}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:none}
+.lede{color:var(--silk-dim);font-size:clamp(15px,1.35vw,18px);max-width:58ch;font-weight:300}
+
+.btn{--cut:11px;display:inline-flex;align-items:center;gap:10px;justify-content:center;
+  font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:15px 26px;border:0;background:var(--copper);color:#160e02;
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));
+  transition:background .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease)}
+.btn:hover{background:var(--copper-hot);transform:translateY(-2px);box-shadow:0 10px 30px -12px rgba(226,164,76,.7)}
+.btn:active{transform:translateY(0)}
+.btn--ghost{background:transparent;color:var(--silk);box-shadow:inset 0 0 0 1px var(--line-strong)}
+.btn--ghost:hover{background:rgba(226,164,76,.08);color:var(--copper-hot);box-shadow:inset 0 0 0 1px var(--copper)}
+.btn--sm{padding:11px 18px;font-size:11px;--cut:8px}
+.btn--block{width:100%}
+:focus-visible{outline:2px solid var(--rail);outline-offset:3px}
+
+.spine{position:fixed;left:22px;top:0;bottom:0;width:34px;z-index:40;pointer-events:none;display:none}
+.spine svg{width:100%;height:100%}
+.spine .rail{stroke:var(--line-strong);stroke-width:2;fill:none}
+.spine .flow{stroke:var(--copper);stroke-width:2;fill:none;filter:drop-shadow(0 0 6px rgba(226,164,76,.8))}
+@media (min-width:1400px){.spine{display:block}}
+
+/* ---------- header ---------- */
+.hdr{position:sticky;top:0;z-index:60;background:rgba(5,8,7,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hdr__bar{display:flex;align-items:center;gap:22px;height:70px;max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand__chip{width:34px;height:34px;flex:none}
+.brand__name{font-family:var(--display);font-weight:900;font-size:16px;letter-spacing:.14em;white-space:nowrap}
+.brand__name span{color:var(--copper)}
+.brand__sub{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--silk-faint);margin-top:2px}
+.nav{display:flex;gap:2px;margin-left:auto}
+.nav a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--silk-dim);padding:9px 11px;position:relative;transition:color .2s;white-space:nowrap}
+.nav a::after{content:"";position:absolute;left:11px;right:11px;bottom:4px;height:1px;background:var(--copper);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease)}
+.nav a:hover{color:var(--silk)}
+.nav a:hover::after{transform:scaleX(1)}
+.hdr__tools{display:flex;align-items:center;gap:10px}
+.icon-btn{position:relative;background:transparent;border:1px solid var(--line-strong);width:40px;height:40px;display:grid;place-items:center;color:var(--silk-dim);transition:.2s var(--ease);padding:0}
+.icon-btn:hover{border-color:var(--copper);color:var(--copper)}
+.cart-count{position:absolute;top:-7px;right:-7px;min-width:19px;height:19px;padding:0 4px;background:var(--copper);color:#160e02;font-family:var(--mono);font-size:10px;font-weight:700;display:grid;place-items:center;border-radius:2px;transform:scale(0);transition:transform .25s var(--ease)}
+.cart-count.on{transform:scale(1)}
+.burger{display:none}
+@media (max-width:1080px){
+  .nav{position:fixed;inset:70px 0 auto 0;flex-direction:column;gap:0;background:var(--board-100);border-bottom:1px solid var(--line);padding:8px var(--gut) 22px;margin-left:0;clip-path:inset(0 0 100% 0);transition:clip-path .35s var(--ease)}
+  .nav.open{clip-path:inset(0 0 0 0)}
+  .nav a{padding:14px 0;font-size:13px;border-bottom:1px solid var(--line)}
+  .nav a::after{display:none}
+  .hdr__tools{margin-left:auto}
+  .burger{display:grid}
+}
+
+/* ---------- ticker ---------- */
+.ticker{border-bottom:1px solid var(--line);background:var(--board-100);overflow:hidden;position:relative;z-index:50}
+.ticker__in{display:flex;gap:0;width:max-content;animation:slide 42s linear infinite}
+.ticker span{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--silk-faint);padding:9px 0;display:flex;align-items:center}
+.ticker span::after{content:"◆";color:var(--copper);margin:0 26px;font-size:7px;opacity:.8}
+@keyframes slide{to{transform:translateX(-50%)}}
+.ticker:hover .ticker__in{animation-play-state:paused}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(50px,8vw,96px) 0 clamp(46px,6vw,80px)}
+.hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,64px);align-items:center}
+@media (max-width:980px){.hero__grid{grid-template-columns:1fr;gap:38px}}
+.hero h1{font-size:clamp(36px,6.6vw,78px);font-weight:900;line-height:.95;letter-spacing:-.02em;margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--copper);display:block}
+.hero h1 .thin{font-weight:500;color:var(--silk-dim);font-size:.42em;letter-spacing:.1em;display:block;margin-bottom:14px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.readout{display:flex;flex-wrap:wrap;margin-top:42px;border-top:1px solid var(--line)}
+.readout div{padding:14px 22px 0 0;margin-right:22px;border-right:1px solid var(--line)}
+.readout div:last-child{border-right:0}
+.readout b{display:block;font-family:var(--mono);font-size:clamp(17px,1.9vw,22px);font-weight:700;color:var(--silk)}
+.readout small{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--silk-faint)}
+
+.post{--cut:20px;background:linear-gradient(160deg,var(--board-200),var(--board-100));border:1px solid var(--line-strong);box-shadow:0 40px 80px -40px #000,inset 0 1px 0 rgba(255,255,255,.03)}
+.post__top{display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--silk-faint);text-transform:uppercase}
+.led{width:7px;height:7px;border-radius:50%;background:var(--line-strong);flex:none}
+.led.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.led.rail{background:var(--rail);box-shadow:0 0 8px var(--rail)}
+.post__top .spacer{margin-left:auto}
+.post__body{padding:20px 18px 22px;font-family:var(--mono);font-size:12px;line-height:1.95;min-height:294px}
+.post__body .row{display:flex;gap:12px;opacity:0;transform:translateY(4px);animation:pop .3s var(--ease) forwards}
+.post__body .k{color:var(--silk-faint);min-width:66px}
+.post__body .v{color:var(--silk-dim)}
+.post__body .ok{color:var(--ok);margin-left:auto}
+.post__body .cu{color:var(--copper);margin-left:auto}
+.post__body .cu.lead{margin-left:0}
+@keyframes pop{to{opacity:1;transform:none}}
+.caret{display:inline-block;width:8px;height:14px;background:var(--copper);vertical-align:-2px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.post__foot{border-top:1px solid var(--line);padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.bar{flex:1;min-width:110px;height:5px;background:var(--board-400);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--copper-deep),var(--copper-hot));animation:load 3.4s var(--ease) forwards}
+@keyframes load{to{width:100%}}
+.post__foot span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--silk-faint)}
+
+/* ---------- sections ---------- */
+.sec{padding:clamp(56px,7vw,100px) 0;position:relative}
+.sec--edge{border-top:1px solid var(--line)}
+.sec__head{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;flex-wrap:wrap;margin-bottom:36px}
+.sec__head p{margin:12px 0 0}
+
+/* ---------- platform slots ---------- */
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:14px}
+.slot{--cut:16px;background:var(--board-200);border:1px solid var(--line);padding:24px 20px 22px;display:block;position:relative;overflow:hidden;transition:border-color .3s var(--ease),transform .3s var(--ease),background .3s var(--ease)}
+.slot::before{content:"";position:absolute;top:0;left:20px;width:44px;height:3px;background:var(--line-strong);transition:background .3s}
+.slot:hover{transform:translateY(-5px);border-color:var(--copper);background:var(--board-300)}
+.slot:hover::before{background:var(--copper)}
+.slot svg{color:var(--copper);margin-bottom:16px;display:block}
+.slot h3{margin-bottom:6px}
+.slot p{font-size:13px;color:var(--silk-dim);margin:0;font-weight:300;line-height:1.5}
+.slot .count{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:10px;color:var(--silk-faint);letter-spacing:.1em}
+
+/* ---------- store ---------- */
+.filterbar{border:1px solid var(--line);background:var(--board-100);padding:16px 18px;margin-bottom:22px}
+.frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 0}
+.frow + .frow{border-top:1px solid var(--line);margin-top:5px}
+.frow__lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--silk-faint);width:74px;flex:none}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;background:transparent;border:1px solid var(--line-strong);color:var(--silk-dim);transition:.2s var(--ease)}
+.chip:hover{color:var(--silk);border-color:var(--silk-faint)}
+.chip[aria-pressed="true"]{background:var(--copper);border-color:var(--copper);color:#160e02;font-weight:700}
+.search{margin-left:auto;display:flex;align-items:center;gap:9px;border:1px solid var(--line-strong);padding:0 13px;background:var(--board-000);min-width:220px}
+.search svg{color:var(--silk-faint);flex:none}
+.search input{background:transparent;border:0;color:var(--silk);font-family:var(--mono);font-size:12px;padding:10px 0;width:100%;outline:none}
+.search input::placeholder{color:var(--silk-faint)}
+@media (max-width:700px){.frow__lbl{width:100%}.search{margin-left:0;width:100%}}
+
+.resultline{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--silk-faint);margin-bottom:16px}
+.resultline b{color:var(--copper)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:16px}
+.card{--cut:16px;background:var(--board-200);border:1px solid var(--line);display:flex;flex-direction:column;position:relative;overflow:hidden;transition:border-color .3s var(--ease),transform .3s var(--ease)}
+.card:hover{border-color:var(--line-strong);transform:translateY(-4px)}
+.card:hover .card__art{background-position:100% 50%}
+.card__art{height:152px;display:grid;place-items:center;position:relative;background:linear-gradient(115deg,var(--board-300),var(--board-100),var(--board-300));background-size:220% 100%;background-position:0 50%;border-bottom:1px solid var(--line);transition:background-position .6s var(--ease)}
+.card__art::before{content:"";position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(rgba(45,64,60,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(45,64,60,.4) 1px,transparent 1px);
+  background-size:22px 22px;mask-image:radial-gradient(circle at 50% 50%,#000,transparent 72%);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000,transparent 72%)}
+.card__art svg{position:relative;color:var(--copper)}
+
+/* real product photo */
+.card__img{position:relative;width:100%;height:100%;object-fit:contain;padding:16px;display:block;transition:transform .45s var(--ease)}
+.card:hover .card__img{transform:scale(1.05)}
+.card__art.has-img .pa{display:none}
+.card__art.has-img.noimg .pa{display:block}
+.card__img ~ .pa{display:none}
+
+/* drawn product illustrations */
+.pa{width:120px;height:120px;position:relative;overflow:visible;transition:transform .45s var(--ease)}
+.card:hover .pa{transform:scale(1.06) translateY(-3px)}
+.pa .b{fill:#131c1a;stroke:#e2a44c;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.pa .w{fill:#c6d3cf;stroke:#7d8f8a;stroke-width:1.6;stroke-linejoin:round}
+.pa .a{fill:var(--pc);stroke:none}
+.pa .l{fill:none;stroke:#e2a44c;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pa .d{fill:none;stroke:#5b6b68;stroke-width:1.6;stroke-linecap:round}
+.card__tag{position:absolute;top:11px;left:11px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;background:rgba(5,8,7,.8);border:1px solid var(--line-strong);color:var(--silk-dim)}
+.card__tag.hot{border-color:var(--copper);color:var(--copper)}
+.card__tag.low{border-color:var(--warn);color:var(--warn)}
+.card__tag.pre{border-color:var(--rail);color:var(--rail)}
+.card__plat{position:absolute;bottom:11px;right:11px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--silk-faint)}
+.card__body{padding:16px 16px 0;flex:1}
+.card__cat{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--silk-faint);display:block;margin-bottom:7px}
+.card__name{font-family:var(--display);font-size:13.5px;font-weight:700;line-height:1.4;letter-spacing:.01em;margin-bottom:8px}
+.card__spec{font-family:var(--mono);font-size:11px;color:var(--silk-dim);line-height:1.7;margin:0 0 14px}
+.card__foot{display:flex;align-items:center;gap:10px;padding:0 16px 16px}
+.price{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--silk);white-space:nowrap}
+.price s{display:block;font-size:10.5px;color:var(--silk-faint);font-weight:400}
+.card__foot .btn{margin-left:auto}
+.card__hit{background:none;border:0;padding:0;margin:0;width:100%;display:block;text-align:left;color:inherit;font:inherit}
+.card__hit:focus-visible{outline:2px solid var(--rail);outline-offset:-3px}
+.empty{grid-column:1/-1;border:1px dashed var(--line-strong);padding:52px 24px;text-align:center}
+.empty p{font-family:var(--mono);font-size:12.5px;color:var(--silk-dim);margin:0 0 4px}
+.empty small{font-family:var(--mono);font-size:11px;color:var(--silk-faint)}
+
+/* ---------- pre-order ---------- */
+.drop{--cut:24px;background:linear-gradient(135deg,var(--board-300),var(--board-100) 55%);border:1px solid var(--line-strong);padding:clamp(28px,4vw,52px);display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(26px,4vw,58px);align-items:center;position:relative;overflow:hidden}
+.drop::after{content:"";position:absolute;right:-90px;top:-90px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(168,116,245,.2),transparent 68%);pointer-events:none}
+@media (max-width:860px){.drop{grid-template-columns:1fr}}
+.drop h2{margin-bottom:14px}
+.drop .price{font-size:28px;color:var(--copper)}
+.drop .buyline{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:24px}
+.platpills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.platpills span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line-strong);padding:5px 10px;color:var(--silk-dim)}
+.clock{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.clock div{background:var(--board-000);border:1px solid var(--line-strong);padding:16px 6px;text-align:center}
+.clock b{display:block;font-family:var(--mono);font-size:clamp(20px,3.2vw,32px);font-weight:700;color:var(--silk);line-height:1;font-variant-numeric:tabular-nums}
+.clock small{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--silk-faint);text-transform:uppercase}
+
+/* ---------- journey ---------- */
+.journey{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);position:relative}
+@media (max-width:860px){.journey{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.journey{grid-template-columns:1fr}}
+.jn{padding:28px 24px 30px;border-right:1px solid var(--line);position:relative;transition:background .3s}
+.jn:last-child{border-right:0}
+.jn:hover{background:var(--board-200)}
+.jn::before{content:"";position:absolute;top:0;left:24px;width:9px;height:9px;background:var(--board-000);border:2px solid var(--copper);transform:translateY(-50%) rotate(45deg)}
+.jn b{display:block;font-family:var(--display);font-size:26px;font-weight:900;color:var(--copper);letter-spacing:.02em;margin-bottom:10px}
+.jn p{font-size:13.5px;color:var(--silk-dim);font-weight:300;margin:0;line-height:1.55}
+@media (max-width:860px){.jn{border-bottom:1px solid var(--line)}.jn:nth-child(2n){border-right:0}}
+@media (max-width:520px){.jn{border-right:0}}
+
+/* ---------- delivery ---------- */
+.svc{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));border:1px solid var(--line)}
+.svc__item{padding:28px 24px;border-right:1px solid var(--line);transition:background .3s}
+.svc__item:last-child{border-right:0}
+.svc__item:hover{background:var(--board-200)}
+.svc__item .des{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--copper);margin-bottom:14px}
+.svc__item h3{margin-bottom:9px;font-size:16px}
+.svc__item p{font-size:13.5px;color:var(--silk-dim);font-weight:300;margin:0 0 10px}
+.svc__item ul{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+.svc__item li{font-family:var(--mono);font-size:11.5px;color:var(--silk-dim);display:flex;gap:9px;line-height:1.6}
+.svc__item li::before{content:"▸";color:var(--copper);flex:none}
+@media (max-width:820px){.svc__item{border-right:0;border-bottom:1px solid var(--line)}.svc__item:last-child{border-bottom:0}}
+
+/* ---------- newsletter ---------- */
+.fw{--cut:20px;border:1px solid var(--line-strong);background:var(--board-100);display:grid;grid-template-columns:1fr 1fr}
+@media (max-width:840px){.fw{grid-template-columns:1fr}}
+.fw__l{padding:clamp(28px,4vw,46px);border-right:1px solid var(--line)}
+.fw__r{padding:clamp(28px,4vw,46px);display:flex;flex-direction:column;justify-content:center}
+@media (max-width:840px){.fw__l{border-right:0;border-bottom:1px solid var(--line)}}
+.fw h2{font-size:clamp(22px,2.6vw,32px);margin-bottom:14px}
+.fw p{font-size:14.5px;color:var(--silk-dim);font-weight:300;margin:0}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.field label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--silk-faint)}
+.field input{background:var(--board-000);border:1px solid var(--line-strong);color:var(--silk);padding:14px 15px;font-family:var(--mono);font-size:13px;outline:none;transition:border-color .2s}
+.field input:focus{border-color:var(--copper)}
+.note{font-family:var(--mono);font-size:11px;color:var(--silk-faint);margin:12px 0 0}
+.note.err{color:var(--warn)}
+.note.good{color:var(--ok)}
+.pins{display:flex;gap:5px;margin-top:30px;overflow:hidden}
+.pins i{display:block;width:20px;height:9px;background:var(--copper-deep);opacity:.45;flex:none}
+.pins i:nth-child(3n){opacity:.8;background:var(--copper)}
+
+/* ---------- locations ---------- */
+.locs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.locs{grid-template-columns:1fr}}
+.loc{--cut:16px;border:1px solid var(--line);background:var(--board-200);padding:28px 26px}
+.loc .des{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--copper);margin-bottom:14px}
+.loc h3{margin-bottom:12px;font-size:16px}
+.loc address{font-style:normal;font-size:14px;color:var(--silk-dim);font-weight:300;line-height:1.65;margin-bottom:16px}
+.loc .lines{display:grid;gap:7px}
+.loc .lines a{font-family:var(--mono);font-size:12px;color:var(--silk-dim);display:flex;gap:10px;align-items:center;transition:color .2s}
+.loc .lines a:hover{color:var(--copper)}
+.loc .lines svg{color:var(--copper);flex:none}
+
+/* ---------- footer ---------- */
+.ftr{border-top:1px solid var(--line);padding:56px 0 0;margin-top:20px}
+.ftr__grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px}
+@media (max-width:820px){.ftr__grid{grid-template-columns:1fr 1fr;gap:30px}}
+.ftr h4{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--silk-faint);margin:0 0 16px;font-weight:500}
+.ftr ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ftr ul a{font-size:14px;color:var(--silk-dim);font-weight:300;transition:color .2s}
+.ftr ul a:hover{color:var(--copper)}
+.ftr__about p{font-size:13.5px;color:var(--silk-dim);font-weight:300;max-width:36ch;margin:16px 0 0}
+.social{display:flex;gap:8px;margin-top:20px}
+.social a{width:34px;height:34px;border:1px solid var(--line-strong);display:grid;place-items:center;color:var(--silk-dim);transition:.2s}
+.social a:hover{border-color:var(--copper);color:var(--copper)}
+.ftr__base{border-top:1px solid var(--line);margin-top:34px;padding:20px 0 30px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--silk-faint);text-transform:uppercase}
+
+/* ---------- cart ---------- */
+.scrim{position:fixed;inset:0;background:rgba(2,4,4,.72);backdrop-filter:blur(3px);z-index:90;opacity:0;visibility:hidden;transition:.3s var(--ease)}
+.scrim.on{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:100;background:var(--board-100);border-left:1px solid var(--line-strong);transform:translateX(101%);transition:transform .38s var(--ease);display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer__top{display:flex;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid var(--line)}
+.drawer__top h3{font-size:14px;letter-spacing:.14em}
+.drawer__top .icon-btn{margin-left:auto;width:34px;height:34px}
+.drawer__list{flex:1;overflow-y:auto;padding:8px 22px}
+.line{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.line__art{width:52px;height:52px;flex:none;display:grid;place-items:center;background:var(--board-300);border:1px solid var(--line);color:var(--copper)}
+.line__nm{font-family:var(--display);font-size:12px;font-weight:700;line-height:1.35;margin-bottom:5px}
+.line__meta{font-family:var(--mono);font-size:11px;color:var(--silk-faint)}
+.qty{display:flex;align-items:center;margin-top:9px;border:1px solid var(--line-strong);width:max-content}
+.qty button{width:26px;height:26px;background:transparent;border:0;color:var(--silk-dim);font-family:var(--mono);font-size:14px;line-height:1;padding:0;transition:.2s}
+.qty button:hover{background:var(--copper);color:#160e02}
+.qty span{width:30px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--silk)}
+.line__rt{margin-left:auto;text-align:right}
+.line__rt .price{font-size:13px}
+.line__rm{background:none;border:0;color:var(--silk-faint);font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:6px 0 0;text-transform:uppercase;transition:color .2s}
+.line__rm:hover{color:var(--warn)}
+.drawer__empty{padding:60px 22px;text-align:center;color:var(--silk-faint);font-family:var(--mono);font-size:12px;line-height:1.9}
+.drawer__foot{border-top:1px solid var(--line);padding:20px 22px;background:var(--board-200)}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;font-family:var(--mono);font-size:12px;color:var(--silk-dim)}
+.tot.grand{font-size:15px;color:var(--silk);margin:12px 0 18px;padding-top:12px;border-top:1px solid var(--line)}
+.tot.grand b{font-size:21px;color:var(--copper)}
+.freehint{font-family:var(--mono);font-size:10.5px;color:var(--copper);margin:0 0 12px;letter-spacing:.06em}
+
+/* ---------- product dialog ---------- */
+.pdialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-46%);width:min(680px,92vw);max-height:86vh;overflow-y:auto;z-index:110;background:var(--board-100);border:1px solid var(--line-strong);box-shadow:0 40px 90px -30px #000;opacity:0;visibility:hidden;transition:opacity .3s var(--ease),transform .3s var(--ease),visibility .3s}
+.pdialog.on{opacity:1;visibility:visible;transform:translate(-50%,-50%)}
+.pdialog__top{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--board-100)}
+.pdialog__top h3{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--silk-faint);font-weight:500}
+.pdialog__top .icon-btn{margin-left:auto;flex:none}
+.pdialog__body{display:grid;grid-template-columns:1fr 1.1fr;gap:26px;padding:24px}
+@media (max-width:600px){.pdialog__body{grid-template-columns:1fr}}
+.pdialog__art{background:var(--board-200);border:1px solid var(--line);display:grid;place-items:center;min-height:240px;position:relative;overflow:hidden}
+.pdialog__art .card__img{position:static;max-height:280px}
+.pdialog__info h2{font-size:clamp(19px,2.4vw,24px);margin-bottom:12px}
+.pdialog__info .card__spec{font-size:12.5px;margin-bottom:6px}
+.pdialog__plat{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--silk-faint);margin-bottom:18px}
+.pdialog__price{font-family:var(--mono);font-weight:700;font-size:24px;color:var(--silk);margin-bottom:22px}
+.pdialog__price s{display:block;font-size:12px;color:var(--silk-faint);font-weight:400}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);z-index:120;background:var(--board-300);border:1px solid var(--copper);color:var(--silk);padding:13px 20px;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;display:flex;align-items:center;gap:10px;transition:transform .4s var(--ease);max-width:90vw}
+.toast.on{transform:translate(-50%,0)}
+.toast svg{color:var(--copper);flex:none}
+
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+  #reticle{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="board-bg" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<svg id="reticle" viewBox="0 0 54 54" aria-hidden="true">
+  <circle cx="27" cy="27" r="18"></circle>
+  <path d="M27 2v9M27 43v9M2 27h9M43 27h9"></path>
+</svg>
+
+<div class="spine" aria-hidden="true">
+  <svg viewBox="0 0 34 1000" preserveAspectRatio="none">
+    <path class="rail" d="M17 0 L17 1000"></path>
+    <path class="flow" id="spineFlow" d="M17 0 L17 0"></path>
+  </svg>
+</div>
+
+<div class="page">
+
+<header class="hdr">
+  <div class="hdr__bar">
+    <a class="brand" href="#top" aria-label="Games The Shop home">
+      <svg class="brand__chip" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <rect x="7.5" y="7.5" width="19" height="19" stroke="#e2a44c" stroke-width="1.5"/>
+        <rect x="13" y="13" width="8" height="8" fill="#e2a44c"/>
+        <g stroke="#a86a24" stroke-width="1.5">
+          <path d="M11 7.5V3M17 7.5V3M23 7.5V3M11 31v-4.5M17 31v-4.5M23 31v-4.5"/>
+          <path d="M7.5 11H3M7.5 17H3M7.5 23H3M31 11h-4.5M31 17h-4.5M31 23h-4.5"/>
+        </g>
+      </svg>
+      <span>
+        <span class="brand__name">GAMES <span>THE SHOP</span></span>
+        <span class="brand__sub">INDIA'S HOME FOR EVERYTHING GAMING</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#store" data-plat="PlayStation">PlayStation</a>
+      <a href="#store" data-plat="Xbox">Xbox</a>
+      <a href="#store" data-plat="Nintendo">Nintendo</a>
+      <a href="#store" data-plat="PC">PC</a>
+      <a href="#store" data-type="Digital">Digital</a>
+      <a href="#preorder">Pre-order</a>
+      <a href="#story">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="hdr__tools">
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 4h3l2.6 11.4A2 2 0 0 0 9.5 17h8.6a2 2 0 0 0 2-1.6L21.5 8H6"/><circle cx="10" cy="20.5" r="1.4"/><circle cx="18" cy="20.5" r="1.4"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__in" id="ticker"></div>
+</div>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <p class="eyebrow">Est. 2009 · Mumbai <span class="ref">/ REF: J1</span></p>
+      <h1>
+        <span class="thin">PlayStation · Xbox · Nintendo · PC</span>
+        India's home for
+        <em>everything gaming.</em>
+      </h1>
+      <p class="lede">Original games, consoles, accessories and merch — shipped anywhere in India since 2013, and stocked at our store in Infiniti II Mall, Malad. Free shipping on every order above ₹999.</p>
+
+      <div class="hero__cta">
+        <a class="btn" href="#store">Shop all products
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn--ghost" href="#preorder">See pre-orders</a>
+      </div>
+
+      <div class="readout">
+        <div><b>2009</b><small>First store, Mumbai</small></div>
+        <div><b>20+</b><small>People on the team</small></div>
+        <div><b>₹999</b><small>Free shipping above</small></div>
+      </div>
+    </div>
+
+    <div class="post notch" role="img" aria-label="Simulated boot screen listing store systems">
+      <div class="post__top">
+        <span class="led on"></span><span class="led rail"></span><span class="led"></span>
+        <span>GTS BIOS · v2.0</span>
+        <span class="spacer"></span>
+        <span id="postClock">--:--:--</span>
+      </div>
+      <div class="post__body" id="postBody"></div>
+      <div class="post__foot">
+        <div class="bar"><i></i></div>
+        <span>CATALOGUE SYNC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="sec sec--edge" id="platforms">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="eyebrow">Shop your favourites <span class="ref">/ REF: U2</span></p>
+        <h2>Pick your platform</h2>
+        <p class="lede">Every major ecosystem, stocked side by side — hardware, discs, controllers, headsets, codes and collectibles.</p>
+      </div>
+    </div>
+
+    <div class="slots rv">
+      <a class="slot notch" href="#store" data-plat="PlayStation">
+        <span class="count">PS5 · PS4</span>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10v4M5 12h4M16 11.5h.01M18.5 14h.01"/></svg>
+        <h3>PlayStation</h3>
+        <p>Consoles, DualSense controllers, PULSE headsets and the full PS5 library.</p>
+      </a>
+      <a class="slot notch" href="#store" data-plat="Xbox">
+        <span class="count">SERIES X|S</span>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6.5 5.5c3 2 8 7.5 11 13M17.5 5.5c-3 2-8 7.5-11 13"/></svg>
+        <h3>Xbox</h3>
+        <p>Series X and Series S hardware, wireless controllers and Game Pass codes.</p>
+      </a>
+      <a class="slot notch" href="#store" data-plat="Nintendo">
+        <span class="count">SWITCH 2</span>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16M15 4v16M6.2 9h.01M6.2 12h.01M17.8 11h.01"/></svg>
+        <h3>Nintendo Switch</h3>
+        <p>Switch 2 and OLED consoles, Joy-Con pairs, first-party titles and eShop cards.</p>
+      </a>
+      <a class="slot notch" href="#store" data-plat="PC">
+        <span class="count">WINDOWS</span>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="7" y="7" width="10" height="10"/><path d="M10 7V3M14 7V3M10 21v-4M14 21v-4M7 10H3M7 14H3M21 10h-4M21 14h-4"/></svg>
+        <h3>PC</h3>
+        <p>Boxed PC titles and Steam wallet codes delivered straight to your inbox.</p>
+      </a>
+      <a class="slot notch" href="#store" data-type="Digital">
+        <span class="count">INSTANT</span>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        <h3>Digital</h3>
+        <p>Gift cards, subscriptions and game codes emailed to you instantly — no shipping.</p>
+      </a>
+      <a class="slot notch" href="#store" data-type="Merchandise">
+        <span class="count">MERCH</span>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3l-5 3 2.5 4L8 8.5V21h8V8.5L18.5 10 21 6l-5-3a4 4 0 0 1-8 0z"/></svg>
+        <h3>Merchandise</h3>
+        <p>Hoodies, mugs, plushies and collectibles from the franchises you already love.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- STORE -->
+<section class="sec sec--edge" id="store">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="eyebrow">All products <span class="ref">/ REF: M3</span></p>
+        <h2>The catalogue</h2>
+        <p class="lede">Filter by platform and product type, or search by title, genre or accessory.</p>
+      </div>
+    </div>
+
+    <div class="filterbar rv">
+      <div class="frow">
+        <span class="frow__lbl">Platform</span>
+        <button class="chip" data-plat="All" aria-pressed="true">All</button>
+        <button class="chip" data-plat="PlayStation" aria-pressed="false">PlayStation</button>
+        <button class="chip" data-plat="Xbox" aria-pressed="false">Xbox</button>
+        <button class="chip" data-plat="Nintendo" aria-pressed="false">Nintendo</button>
+        <button class="chip" data-plat="PC" aria-pressed="false">PC</button>
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+          <input type="search" id="q" placeholder="Search titles, genres, accessories…" aria-label="Search products">
+        </label>
+      </div>
+      <div class="frow">
+        <span class="frow__lbl">Type</span>
+        <button class="chip" data-type="All" aria-pressed="true">All</button>
+        <button class="chip" data-type="Games" aria-pressed="false">Games</button>
+        <button class="chip" data-type="Consoles" aria-pressed="false">Consoles</button>
+        <button class="chip" data-type="Accessories" aria-pressed="false">Accessories</button>
+        <button class="chip" data-type="Digital" aria-pressed="false">Digital</button>
+        <button class="chip" data-type="Merchandise" aria-pressed="false">Merchandise</button>
+      </div>
+    </div>
+
+    <p class="resultline" id="resultline"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- PRE-ORDER -->
+<section class="sec sec--edge" id="preorder">
+  <div class="wrap">
+    <div class="drop notch rv">
+      <div>
+        <p class="eyebrow">Pre-order <span class="ref">/ REF: PCIE_1</span></p>
+        <h2>Grand Theft<br>Auto VI</h2>
+        <div class="platpills">
+          <span>PS5</span><span>Xbox Series X|S</span><span>19 Nov 2026</span>
+        </div>
+        <p class="lede">Rockstar's return to Vice City, releasing 19 November 2026 on PS5 and Xbox Series X|S. Reserve now and we dispatch a day before launch so it lands on release day. Note that the boxed edition ships with a download code rather than a disc.</p>
+        <div class="buyline">
+          <div class="price">₹5,999</div>
+          <button class="btn" data-add="gta6">Pre-order now</button>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow" style="margin-bottom:14px">Releases in</p>
+        <div class="clock" id="clock">
+          <div><b data-d>00</b><small>Days</small></div>
+          <div><b data-h>00</b><small>Hrs</small></div>
+          <div><b data-m>00</b><small>Min</small></div>
+          <div><b data-s>00</b><small>Sec</small></div>
+        </div>
+        <p class="note" style="margin-top:14px">Pre-orders dispatched one day before release date.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="sec sec--edge" id="story">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="eyebrow">Our journey <span class="ref">/ REF: TL_1</span></p>
+        <h2>Player 2 since 2009</h2>
+        <p class="lede">Finding original games in India used to be genuinely hard. We started with one store in Mumbai to fix that, then took it nationwide.</p>
+      </div>
+    </div>
+
+    <div class="journey rv">
+      <div class="jn">
+        <b>2000</b>
+        <p>Express Interactive begins distributing game software to online and offline stores across India.</p>
+      </div>
+      <div class="jn">
+        <b>2009</b>
+        <p>Games The Shop opens its very first retail store at R-City Mall, Mumbai.</p>
+      </div>
+      <div class="jn">
+        <b>2013</b>
+        <p>Online mode unlocked. Delivery reaches players outside the metros, whatever their pin code.</p>
+      </div>
+      <div class="jn">
+        <b>2026</b>
+        <p>Games The Shop 2.0 launches — 20+ people on the team, plus the physical store.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section class="sec sec--edge" id="delivery">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="eyebrow">Shipping &amp; delivery <span class="ref">/ REF: HDR_1</span></p>
+        <h2>What to expect after you order</h2>
+      </div>
+    </div>
+
+    <div class="svc rv">
+      <div class="svc__item">
+        <div class="des">SHIP—01</div>
+        <h3>Delivery timelines</h3>
+        <p>Counted from the date of dispatch, not the date you order.</p>
+        <ul>
+          <li>Games: 2–3 working days</li>
+          <li>Consoles, accessories, merch: 3–7 working days</li>
+          <li>We ship Monday to Saturday, excluding public and bank holidays</li>
+        </ul>
+      </div>
+      <div class="svc__item">
+        <div class="des">SHIP—02</div>
+        <h3>Shipping charges</h3>
+        <p>One flat rule, no slabs to work out at checkout.</p>
+        <ul>
+          <li>Above ₹999: free shipping</li>
+          <li>₹999 and below: flat ₹79</li>
+          <li>Extended delivery pin codes may carry a surcharge — we'll tell you before dispatch</li>
+        </ul>
+      </div>
+      <div class="svc__item">
+        <div class="des">SHIP—03</div>
+        <h3>Pre-orders &amp; digital</h3>
+        <p>Two categories that don't follow the standard timeline.</p>
+        <ul>
+          <li>Pre-orders dispatch one day before the official release date</li>
+          <li>Digital codes and gift cards arrive instantly by email</li>
+          <li>Track any order from the Your Orders page</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="sec sec--edge">
+  <div class="wrap">
+    <div class="fw notch rv">
+      <div class="fw__l">
+        <p class="eyebrow">Stay in the loop <span class="ref">/ REF: IO_1</span></p>
+        <h2>New releases, before they land</h2>
+        <p>Restocks, pre-order windows and price drops across PlayStation, Xbox, Nintendo and PC — one email, once a week. Leave any time.</p>
+        <div class="pins" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="fw__r">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <button class="btn btn--block" id="subBtn">Sign me up</button>
+        <p class="note" id="subNote">No spam. Unsubscribe in one click.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec sec--edge" id="contact">
+  <div class="wrap">
+    <div class="sec__head rv">
+      <div>
+        <p class="eyebrow">Reach us <span class="ref">/ REF: IO_2</span></p>
+        <h2>Talk to a human</h2>
+        <p class="lede">Support runs on email and WhatsApp, and the Malad store is open for walk-ins.</p>
+      </div>
+    </div>
+
+    <div class="locs rv">
+      <div class="loc notch">
+        <div class="des">LOC—01 · RETAIL</div>
+        <h3>Infiniti II Mall, Malad</h3>
+        <address>Shop No. LG-012, Lower Ground, Infiniti II Mall — Malad, Link Road, near Goregaon Sport Club, Malad (W), Mumbai 400 064, Maharashtra</address>
+        <div class="lines">
+          <a href="tel:+912242669692"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15 14l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>022 4266 9692</a>
+          <a href="mailto:infinity@gamestheshop.com"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M3 6.5l9 6 9-6"/></svg>infinity@gamestheshop.com</a>
+        </div>
+      </div>
+
+      <div class="loc notch">
+        <div class="des">LOC—02 · SUPPORT &amp; REGISTERED OFFICE</div>
+        <h3>Kanakia Western Edge, Borivali</h3>
+        <address>Game Shop Retail Pvt. Ltd., 401, Kanakia Western Edge — Phase 1, Western Express Highway, Borivali (E), Mumbai 400 066</address>
+        <div class="lines">
+          <a href="https://wa.me/919833323529"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 8 20.2z"/></svg>WhatsApp +91 98333 23529</a>
+          <a href="tel:+912242312133"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15 14l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>+91 22 4231 2133 / +91 22 4231 2100</a>
+          <a href="mailto:helpdesk@gamestheshop.com"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M3 6.5l9 6 9-6"/></svg>helpdesk@gamestheshop.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__grid">
+      <div class="ftr__about">
+        <span class="brand__name">GAMES <span>THE SHOP</span></span>
+        <p>The destination for everything gaming in India — latest releases, pre-orders, consoles and accessories across PlayStation, Xbox, Nintendo and PC.</p>
+        <div class="social">
+          <a href="https://x.com/gamestheshop/" aria-label="X"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2H21l-6.5 7.5L22.2 22h-6l-4.7-6.2L6.1 22H3.3l7-8L2.2 2h6.2l4.2 5.6zm-1 18.3h1.6L7.9 3.6H6.2z"/></svg></a>
+          <a href="https://www.facebook.com/gamestheshop/" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.6-1.6h1.6V4.2A21 21 0 0 0 14.3 4c-2.4 0-4 1.5-4 4.2v2.6H7.6V14h2.7v8z"/></svg></a>
+          <a href="https://www.instagram.com/gamestheshop/" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://wa.me/919833323529/" aria-label="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 8 20.2z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Our products</h4>
+        <ul>
+          <li><a href="#store" data-plat="PlayStation">PlayStation</a></li>
+          <li><a href="#store" data-plat="Xbox">Xbox</a></li>
+          <li><a href="#store" data-plat="Nintendo">Nintendo</a></li>
+          <li><a href="#store" data-type="Digital">Digital</a></li>
+          <li><a href="#preorder">Pre-order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#top">Home</a></li>
+          <li><a href="#story">About us</a></li>
+          <li><a href="#contact">Contact us</a></li>
+          <li><a href="#delivery">Shipping policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Customer services</h4>
+        <ul>
+          <li><a href="#contact">Help / FAQ</a></li>
+          <li><a href="#contact">Refunds &amp; returns</a></li>
+          <li><a href="#contact">Privacy policy</a></li>
+          <li><a href="#contact">Terms &amp; conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ftr__base">
+      <span>© 2026 Game Shop Retail Pvt. Ltd. All rights reserved</span>
+      <span>Prices in INR</span>
+      <span>Free shipping above ₹999</span>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="drawer__top">
+    <span class="led on"></span>
+    <h3>YOUR CART</h3>
+    <button class="icon-btn" id="closeCart" aria-label="Close cart">
+      <svg width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+  </div>
+  <div class="drawer__list" id="cartList"></div>
+  <div class="drawer__foot" id="cartFoot" hidden>
+    <p class="freehint" id="freehint" hidden></p>
+    <div class="tot"><span>Subtotal</span><span id="sub">₹0</span></div>
+    <div class="tot"><span>Shipping</span><span id="ship">Free</span></div>
+    <div class="tot grand"><span>Total</span><b id="grand">₹0</b></div>
+    <button class="btn btn--block" id="checkout">Proceed to checkout</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
+  <span id="toastMsg">Added</span>
+</div>
+
+<div class="pdialog notch" id="pdialog" role="dialog" aria-modal="true" aria-labelledby="pdTitle" aria-hidden="true">
+  <div class="pdialog__top">
+    <span class="led on"></span>
+    <h3>Product details</h3>
+    <button class="icon-btn" id="pdClose" aria-label="Close product details">
+      <svg width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+  </div>
+  <div class="pdialog__body">
+    <div class="pdialog__art" id="pdArt"></div>
+    <div class="pdialog__info">
+      <span class="card__cat" id="pdCat"></span>
+      <h2 id="pdTitle"></h2>
+      <p class="card__spec" id="pdSpec"></p>
+      <span class="pdialog__plat" id="pdPlat"></span>
+      <div class="pdialog__price" id="pdPrice"></div>
+      <button class="btn btn--block" id="pdAdd" data-add="">Add to cart</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= CONFIG — edit these to match live inventory ================= */
+var FREE_SHIP_ABOVE = 999;   // free shipping above this value
+var FLAT_SHIP        = 79;   // flat fee at or below it
+var RELEASE_DATE     = '2026-11-19T00:00:00+05:30'; // GTA VI launch
+
+/* ---- PRODUCT IMAGES ----------------------------------------------------
+   Add an `img` key to any product below and the card shows a real photo
+   instead of the generated box. Relative paths get IMG_BASE prefixed;
+   full https:// URLs are used as-is. A broken or missing image silently
+   falls back to the generated box, so a bad URL never leaves a blank card.
+
+     IMG_BASE = 'images/';                    -> img:'ps5-slim.jpg'
+     IMG_BASE = 'https://your-cdn.com/p/';    -> img:'ps5-slim.jpg'
+
+   The live site serves product shots from its own S3 bucket in this shape:
+     https://gts-ap-south-1.s3.ap-south-1.amazonaws.com/products/images/<uuid>.jpg
+   Point IMG_BASE there (or at your CDN) and set each `img` to the filename.
+------------------------------------------------------------------------ */
+var IMG_BASE = 'images/';
+
+var PLATCOLOR = {PlayStation:'#2e6be6', Xbox:'#52b043', Nintendo:'#e4000f', PC:'#e2a44c', Multi:'#a874f5'};
+
+var ICONS = {
+  Consoles:'<rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10v4M5 12h4M16 11.5h.01M18.5 14h.01"/>',
+  Games:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6"/><path d="M12 3a9 9 0 0 1 7.8 4.5"/>',
+  Accessories:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>',
+  Digital:'<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>',
+  Merchandise:'<path d="M8 3l-5 3 2.5 4L8 8.5V21h8V8.5L18.5 10 21 6l-5-3a4 4 0 0 1-8 0z"/>'
+};
+/* ---- drawn product art -------------------------------------------------
+   Each entry is the inner markup of a 100x100 SVG.
+   Classes: .b body · .w light panel · .a platform accent · .l line · .d detail
+------------------------------------------------------------------------ */
+var ART = {
+
+  ps5:'<path class="w" d="M37 13q-9 3-8 13l4 47q1 13 9 13h2V13z"/>'+
+      '<path class="w" d="M63 13q9 3 8 13l-4 47q-1 13-9 13h-2V13z"/>'+
+      '<rect class="b" x="42" y="12" width="16" height="76" rx="3"/>'+
+      '<rect class="a" x="45" y="26" width="10" height="2.6" rx="1.3"/>'+
+      '<path class="d" d="M46 40h8M46 46h8"/><circle class="a" cx="50" cy="79" r="2.2"/>',
+
+  ps5d:'<path class="w" d="M37 13q-9 3-8 13l4 47q1 13 9 13h2V13z"/>'+
+       '<path class="w" d="M63 13q9 3 8 13l-4 47q-1 13-9 13h-2V13z"/>'+
+       '<rect class="b" x="42" y="12" width="16" height="76" rx="3"/>'+
+       '<path class="d" d="M46 38h8M46 44h8M46 50h8"/><circle class="a" cx="50" cy="79" r="2.2"/>',
+
+  xboxx:'<rect class="b" x="32" y="17" width="36" height="68" rx="5"/>'+
+        '<rect class="d" x="37" y="22" width="26" height="9" rx="3"/>'+
+        '<circle class="a" cx="58" cy="26.5" r="3.4"/>'+
+        '<path class="d" d="M38 44h24M38 52h24M38 60h24"/>'+
+        '<circle class="l" cx="50" cy="75" r="3.4"/>',
+
+  xboxs:'<rect class="w" x="30" y="30" width="40" height="44" rx="5"/>'+
+        '<circle class="b" cx="45" cy="44" r="9"/>'+
+        '<circle class="a" cx="45" cy="44" r="3.5"/>'+
+        '<path class="d" d="M36 60h28M36 66h20"/>',
+
+  swtch:'<rect class="b" x="34" y="28" width="32" height="44" rx="3"/>'+
+        '<path class="a" d="M30 28h4v44h-4q-8 0-8-8V36q0-8 8-8z"/>'+
+        '<path class="a" d="M70 28h-4v44h4q8 0 8-8V36q0-8-8-8z" opacity=".72"/>'+
+        '<circle class="l" cx="26" cy="40" r="3.4"/><circle class="l" cx="74" cy="60" r="3.4"/>'+
+        '<path class="d" d="M39 36h22M39 43h22M39 50h14"/>',
+
+  pad:'<path class="b" d="M32 45q-13 3-13 18 0 13 9 13 6 0 9-6l4-8h20l4 8q3 6 9 6 9 0 9-13 0-15-13-18-6-1-12-1h-14q-6 0-12 1z"/>'+
+      '<circle class="l" cx="39" cy="61" r="4.2"/><circle class="l" cx="61" cy="61" r="4.2"/>'+
+      '<path class="l" d="M33 51h7M36.5 47.5v7"/>'+
+      '<circle class="a" cx="64" cy="49" r="2.4"/><circle class="a" cx="58" cy="53" r="2.4"/>'+
+      '<rect class="d" x="44" y="45" width="12" height="7" rx="2"/>',
+
+  joycon:'<path class="a" d="M36 26h-6q-9 0-9 9v30q0 9 9 9h6z"/>'+
+         '<path class="b" d="M64 26h6q9 0 9 9v30q0 9-9 9h-6z"/>'+
+         '<circle class="l" cx="29" cy="40" r="4"/><circle class="l" cx="71" cy="62" r="4"/>'+
+         '<path class="d" d="M29 58h.01M71 40h.01M44 30v40M56 30v40"/>',
+
+  headset:'<path class="l" d="M27 57V46a23 23 0 0 1 46 0v11"/>'+
+          '<rect class="b" x="18" y="50" width="17" height="28" rx="7"/>'+
+          '<rect class="b" x="65" y="50" width="17" height="28" rx="7"/>'+
+          '<path class="l" d="M35 72q10 6 12 11"/><circle class="a" cx="48" cy="85" r="3"/>'+
+          '<path class="d" d="M24 58v12M76 58v12"/>',
+
+  csecase:'<rect class="b" x="31" y="13" width="38" height="74" rx="3"/>'+
+          '<path class="a" d="M31 16a3 3 0 0 1 3-3h5v74h-5a3 3 0 0 1-3-3z"/>'+
+          '<circle class="d" cx="54" cy="42" r="12"/><circle class="l" cx="54" cy="42" r="3.4"/>'+
+          '<path class="d" d="M45 66h18M45 72h12"/>',
+
+  card:'<rect class="b" x="20" y="33" width="60" height="36" rx="4"/>'+
+       '<rect class="a" x="20" y="41" width="60" height="5"/>'+
+       '<rect class="d" x="27" y="54" width="15" height="10" rx="2"/>'+
+       '<path class="a" d="M64 52l-8 11h5l-1.5 8 9-12h-5.5z"/>',
+
+  hoodie:'<path class="b" d="M39 25 24 34l5 13 6-3v34h30V44l6 3 5-13-15-9q-6 7-11 7t-11-7z"/>'+
+         '<path class="a" d="M43 27q7 6 14 0l-3-2q-4 3-8 0z"/>'+
+         '<path class="l" d="M50 33v13"/><path class="d" d="M36 58v18M64 58v18"/>',
+
+  mug:'<path class="b" d="M29 35h35v31a9 9 0 0 1-9 9H38a9 9 0 0 1-9-9z"/>'+
+      '<rect class="a" x="29" y="35" width="35" height="6"/>'+
+      '<path class="l" d="M64 44h6a8 8 0 0 1 0 16h-6"/>'+
+      '<path class="d" d="M38 50h17M38 58h11"/>',
+
+  plush:'<circle class="b" cx="50" cy="59" r="21"/>'+
+        '<path class="a" d="M37 42 30 27l15 8z"/><path class="a" d="M63 42 70 27l-15 8z"/>'+
+        '<circle class="l" cx="43" cy="55" r="2"/><circle class="l" cx="57" cy="55" r="2"/>'+
+        '<path class="l" d="M45 65q5 4 10 0"/>'+
+        '<circle class="a" cx="36" cy="64" r="3.4"/><circle class="a" cx="64" cy="64" r="3.4"/>',
+
+  sword:'<path class="b" d="M50 16l6 10v32l-6 9-6-9V26z"/>'+
+        '<path class="a" d="M34 60h32v7H34z"/>'+
+        '<rect class="b" x="46" y="67" width="8" height="12" rx="2"/>'+
+        '<circle class="l" cx="50" cy="86" r="5"/><path class="d" d="M50 24v30"/>'
+};
+
+/* product id -> illustration */
+var ART_MAP = {
+  ps5disc:'ps5', ps5dig:'ps5d', dsense:'pad', dscobalt:'pad', psvr2:'headset', psportal:'card',
+  sm2:'csecase', yotei:'csecase', gt7:'csecase', tlou2:'csecase', fc26:'csecase', gowr:'csecase',
+  psgc1000:'card', psgc5000:'card',
+  gpultimate1m:'card', gpultimate3m:'card', wwe2k25:'csecase',
+  fc27switch:'csecase', onimusha:'csecase', dd2da:'csecase', cp2077switch:'csecase', ff7r:'csecase', hitman:'csecase',
+  p4rsteel:'csecase', p4rstd:'csecase', yakuza0:'csecase', acunity:'csecase',
+  steam500:'card', steam1000:'card',
+  cgdeadpool:'plush', cgstormtrooper:'plush', cgluffy:'plush', laracroft:'plush',
+  gta6:'csecase'
+};
+var ART_BY_TYPE = {Games:'csecase', Consoles:'xboxx', Accessories:'pad', Digital:'card', Merchandise:'hoodie'};
+
+function svgFor(type,size){
+  var s = size || 46;
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">'+(ICONS[type]||ICONS.Games)+'</svg>';
+}
+
+function boxHTML(p){
+  var col = PLATCOLOR[p.plat] || '#e2a44c';
+  var key = ART_MAP[p.id] || ART_BY_TYPE[p.type] || 'csecase';
+  return '<svg class="pa" viewBox="0 0 100 100" style="--pc:'+col+'" role="img" aria-label="'+esc(p.name)+'">'+
+           ART[key] +
+         '</svg>';
+}
+
+/* real photo when `img` is set, drawn art otherwise or on load failure */
+function artHTML(p){
+  if(!p.img) return boxHTML(p);
+  var src = /^https?:\/\//.test(p.img) ? p.img : IMG_BASE + p.img;
+  return '<img class="card__img" src="'+esc(src)+'" alt="'+esc(p.name)+'" loading="lazy" '+
+         'onerror="this.parentNode.classList.add(\'noimg\');this.remove();">' + boxHTML(p);
+}
+
+/* ================= CATALOGUE =================
+   Pulled live from gamestheshop.com — names, images and prices match
+   the real storefront (S3/CloudFront product photos, live INR pricing).
+   plat: PlayStation | Xbox | Nintendo | PC | Multi
+   type: Games | Consoles | Accessories | Digital | Merchandise      */
+var PRODUCTS = [
+  /* --- PlayStation --- */
+  {id:'ps5disc', plat:'PlayStation', type:'Consoles',    name:'PlayStation 5 Slim Console — Disc Edition',   spec:'1 TB SSD · 4K/120 · Ultra-HD Blu-ray drive', price:69990, tag:'In stock', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/028b58bb-6eed-4788-b65d-73dd1822b2db.png'},
+  {id:'ps5dig',  plat:'PlayStation', type:'Consoles',    name:'PlayStation 5 Slim Console — Digital Edition',spec:'1 TB SSD · 4K/120 · All-digital',            price:49990, tag:'In stock', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/54a442b0-e193-4287-b4d0-13f0aef1bf93.png'},
+  {id:'dsense',  plat:'PlayStation', type:'Accessories', name:'DualSense Wireless Controller — Midnight Black', spec:'Haptic feedback · Adaptive triggers',     price:6390,  tag:'In stock', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/ec1fc065-eb8b-44dc-a697-e9ed0b9c98f2.png'},
+  {id:'dscobalt',plat:'PlayStation', type:'Accessories', name:'DualSense Wireless Controller — Cobalt Blue',    spec:'Haptic feedback · Adaptive triggers',     price:6849,  tag:'In stock', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/02c826f9-8176-45eb-944c-1392108046ad.png'},
+  {id:'psvr2',   plat:'PlayStation', type:'Accessories', name:'PlayStation VR2',                     spec:'4K HDR OLED · Eye tracking · Sense controllers', price:44999, tag:'In stock', img:'https://dmrssyid8lcug.cloudfront.net/products/images/9d3cb4aa-fbe3-489a-a6b1-42e6dc05f439.png'},
+  {id:'psportal',plat:'PlayStation', type:'Accessories', name:'PlayStation Portal Remote Player',    spec:'8" HD display · Remote Play streaming',      price:18990, tag:'In stock', img:'https://dmrssyid8lcug.cloudfront.net/products/images/22acbf88-b016-42e8-a13c-d2ae717df8aa.png'},
+  {id:'sm2',     plat:'PlayStation', type:'Games',       name:'Marvel’s Spider-Man 2',          spec:'PS5 · Action · Sealed',                      price:3499,  mrp:5199, tag:'Deal', tagType:'hot', genre:'Action', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/776f25c6-e5ec-47c3-89e7-4538cdf03e73.jpg'},
+  {id:'yotei',   plat:'PlayStation', type:'Games',       name:'Ghost Of Yotei',                      spec:'PS5 · Action · Sealed',                      price:4199,  mrp:5199, tag:'Deal', tagType:'hot', genre:'Action', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/2d8aa6b6-208b-48ce-b1cd-e958333b383f.jpg'},
+  {id:'gt7',     plat:'PlayStation', type:'Games',       name:'Gran Turismo 7',                      spec:'PS5 · Racing · Sealed',                      price:2599,  mrp:5199, tag:'Deal', tagType:'hot', genre:'Racing', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/a6233d9e-c860-4f07-b2d1-ed010517af64.jpg'},
+  {id:'tlou2',   plat:'PlayStation', type:'Games',       name:'The Last of Us Part II Remastered',   spec:'PS5 · Thriller · Sealed',                    price:2199,  mrp:3199, tag:'Deal', tagType:'hot', genre:'Thriller', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/f8894357-d8a4-43c8-8278-002cfc6e6a73.jpg'},
+  {id:'fc26',    plat:'PlayStation', type:'Games',       name:'EA Sports FC 26',                     spec:'PS5 · Sports · Sealed',                      price:2999,  mrp:4999, tag:'Deal', tagType:'hot', genre:'Sports', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/5990ae0e-4168-49e8-b8d8-77c099c1ed76.jpg'},
+  {id:'gowr',    plat:'PlayStation', type:'Games',       name:'God of War: Ragnarok',                spec:'PS5 · Action · Sealed',                      price:2599,  mrp:5199, tag:'Deal', tagType:'hot', genre:'Action', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/fd64548e-ba5f-47b9-bd13-e0bb425772f9.jpg'},
+  {id:'psgc1000',plat:'PlayStation', type:'Digital',     name:'PlayStation Store Gift Card ₹1,000',  spec:'Emailed instantly · India account',          price:1000,  tag:'Instant', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/990469c2-f634-409d-a0bd-bea9686c5749.png'},
+  {id:'psgc5000',plat:'PlayStation', type:'Digital',     name:'PlayStation Store Gift Card ₹5,000',  spec:'Emailed instantly · India account',          price:5000,  tag:'Instant', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/7a3ab1a8-de5e-43f3-ab49-19e0be6cb168.png'},
+
+  /* --- Xbox --- */
+  {id:'gpultimate1m', plat:'Xbox', type:'Digital', name:'Xbox Game Pass Ultimate — 1 Month',  spec:'Emailed instantly · Console, PC, Cloud', price:1089, tag:'Instant', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/c8542ff7-72cc-425c-babd-64fe3acccc87.png'},
+  {id:'gpultimate3m', plat:'Xbox', type:'Digital', name:'Xbox Game Pass Ultimate — 3 Months', spec:'Emailed instantly · Console, PC, Cloud', price:3269, tag:'Instant', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/0aef7088-79fc-4085-86ef-c85f044e75ef.png'},
+  {id:'wwe2k25', plat:'Xbox', type:'Games', name:'WWE 2K25', spec:'Xbox Series X|S · Sports · Sealed', price:2499, mrp:4999, tag:'Deal', tagType:'hot', genre:'Sports', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/b39d847c-35c3-4740-adaf-bac499320b91.jpg'},
+
+  /* --- Nintendo --- */
+  {id:'fc27switch',   plat:'Nintendo', type:'Games', name:'EA Sports FC 27',       spec:'Switch · Sports · Sealed', price:5499, tag:'In stock', genre:'Sports', img:'https://dmrssyid8lcug.cloudfront.net/products/images/47c754c9-ee19-4973-8699-d22d6898830d.jpg'},
+  {id:'onimusha',     plat:'Nintendo', type:'Games', name:'Onimusha: Way of the Sword', spec:'Switch · Action · Sealed', price:5499, tag:'In stock', genre:'Action', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/e2669e64-5882-4d2d-a83f-434a32c60d23.jpg'},
+  {id:'dd2da',        plat:'Nintendo', type:'Games', name:'Dragon’s Dogma 2: Dark Arisen', spec:'Switch · RPG · Sealed', price:4499, tag:'In stock', genre:'RPG', img:'https://dmrssyid8lcug.cloudfront.net/products/images/a396f33f-76f6-4e6c-b0b3-231a0d2c2a2b.jpg'},
+  {id:'cp2077switch', plat:'Nintendo', type:'Games', name:'Cyberpunk 2077: Ultimate Edition', spec:'Switch · Thriller · Sealed', price:5499, tag:'In stock', genre:'Thriller', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/bb337738-90c6-4b29-a8d6-1dc612e53f26.jpg'},
+  {id:'ff7r',         plat:'Nintendo', type:'Games', name:'Final Fantasy VII Rebirth', spec:'Switch · RPG · Sealed', price:3999, tag:'In stock', genre:'RPG', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/435cecda-c8d7-4f1c-81fe-3a463f0bed15.jpg'},
+  {id:'hitman',       plat:'Nintendo', type:'Games', name:'HITMAN World of Assassination — Signature Edition', spec:'Switch · Stealth · Sealed', price:5499, tag:'In stock', genre:'Stealth', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/68ce6501-2755-47d0-882a-c938e3863add.jpg'},
+
+  /* --- PC --- */
+  {id:'p4rsteel', plat:'PC', type:'Games', name:'Persona 4 Revival — Steelbook Edition',  spec:'PC · RPG · Steam code in box', price:3999, tag:'In stock', genre:'RPG', img:'https://dmrssyid8lcug.cloudfront.net/products/images/286d100c-8def-495d-b6ae-2e7ae9f2c6c2.png'},
+  {id:'p4rstd',   plat:'PC', type:'Games', name:'Persona 4 Revival — Standard Edition',   spec:'PC · RPG · Steam code in box', price:3499, tag:'In stock', genre:'RPG', img:'https://dmrssyid8lcug.cloudfront.net/products/images/3e2e83e4-c99d-4e4f-baf1-af77b9eda55b.jpg'},
+  {id:'yakuza0',  plat:'PC', type:'Games', name:'Yakuza 0',                              spec:'PC · Action · Boxed',          price:1099, mrp:1499, tag:'Deal', tagType:'hot', genre:'Action', img:'https://dmrssyid8lcug.cloudfront.net/products/images/beff0604-9ef3-40b8-9991-e0ceade14e5c.jpg'},
+  {id:'acunity',  plat:'PC', type:'Games', name:'Assassin’s Creed Unity',           spec:'PC · Action · Boxed',          price:1199, mrp:1299, tag:'In stock', genre:'Action', img:'https://dmrssyid8lcug.cloudfront.net/products/images/560e5d46-b327-4bee-bdfe-44b4be2e980d.jpg'},
+  {id:'steam500', plat:'PC', type:'Digital', name:'Steam Wallet Card ₹500',  spec:'Emailed instantly · India region', price:485, mrp:500,  tag:'Instant', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/c33d88ef-4a69-481f-b0ea-b8198fbc2b31.png'},
+  {id:'steam1000',plat:'PC', type:'Digital', name:'Steam Wallet Card ₹1,000',spec:'Emailed instantly · India region', price:970, mrp:1000, tag:'Instant', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/d4552f16-e19d-4786-9f16-2c5a665b3964.png'},
+
+  /* --- Merchandise --- */
+  {id:'cgdeadpool',    plat:'Multi', type:'Merchandise', name:'Marvel: Deadpool Bringing Up The Rear — Cable Guys', spec:'Controller & phone holder · PVC', price:1999, mrp:2499, tag:'Deal', tagType:'hot', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/2d031384-7f98-4c68-bd9b-06d4ab25b977.png'},
+  {id:'cgstormtrooper',plat:'Multi', type:'Merchandise', name:'Star Wars: Imperial Stormtrooper — Cable Guys',     spec:'Collectible figure device holder', price:1999, mrp:2499, tag:'Deal', tagType:'hot', img:'https://gts-ap-south-1.s3.amazonaws.com/products/images/20b962b0-2ee3-4acf-bf68-aeb5c2adc42e.png'},
+  {id:'cgluffy',       plat:'Multi', type:'Merchandise', name:'One Piece: Luffy Bounty Edition — Cable Guys',      spec:'Collectible figure device holder', price:1999, mrp:2499, tag:'Deal', tagType:'hot', img:'https://dmrssyid8lcug.cloudfront.net/products/images/a9bd55e5-c3c7-4935-b772-03bae1f33afa.png'},
+  {id:'laracroft',     plat:'Multi', type:'Merchandise', name:'Tomb Raider: Lara Croft PVC Statue',                spec:'By Dark Horse Comics · Collector’s piece', price:12999, mrp:16799, tag:'Deal', tagType:'hot', img:'https://dmrssyid8lcug.cloudfront.net/products/images/7926210c-8229-4db7-80a9-98e29517aab9.png'}
+];
+
+var PREORDER = {id:'gta6', plat:'PlayStation', type:'Games', name:'Grand Theft Auto VI — (Code in Box)', spec:'PS5 / Xbox Series X|S · Release 19 Nov 2026', price:5999, genre:'Action', img:'https://dmrssyid8lcug.cloudfront.net/products/images/018d787c-e5ce-4922-9b09-746353c5c728.jpg'};
+
+/* ================= helpers ================= */
+var $  = function(s,r){return (r||document).querySelector(s)};
+var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function inr(n){ return '\u20B9' + n.toLocaleString('en-IN'); }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function find(id){ return id === PREORDER.id ? PREORDER : PRODUCTS.filter(function(p){return p.id===id})[0]; }
+
+/* ================= ticker ================= */
+(function(){
+  var msgs = ['Free shipping above ₹999','Games delivered in 2–3 working days','Digital codes emailed instantly',
+              'Pre-orders dispatched a day before release','Walk in at Infiniti II Mall, Malad','We ship Monday to Saturday',
+              'PlayStation · Xbox · Nintendo · PC','Serving Indian gamers since 2009'];
+  var html = msgs.map(function(m){return '<span>'+m+'</span>'}).join('');
+  $('#ticker').innerHTML = html + html;
+})();
+
+/* ================= boot sequence ================= */
+(function(){
+  var lines = [
+    ['BOOT','games the shop 2.0',            'OK'],
+    ['ORG', 'game shop retail pvt. ltd.',    'OK'],
+    ['SITE','mumbai · online since 2013',    'OK'],
+    ['PLAT','playstation · xbox · nintendo · pc','4'],
+    ['CAT', 'games · consoles · accessories · merch','OK'],
+    ['SHIP','free above ₹999 · flat ₹79 below','OK'],
+    ['DGTL','codes delivered by email',   'INSTANT'],
+    ['PRE', 'dispatch 1 day before release',  'ARMED']
+  ];
+  var body = $('#postBody');
+  lines.forEach(function(l,i){
+    var row = document.createElement('div');
+    row.className = 'row';
+    row.style.animationDelay = (reduce ? 0 : i*0.19)+'s';
+    row.innerHTML = '<span class="k">'+l[0]+'</span><span class="v">'+esc(l[1])+'</span>'+
+                    '<span class="'+(l[2]==='OK'?'ok':'cu')+'">['+l[2]+']</span>';
+    body.appendChild(row);
+  });
+  var last = document.createElement('div');
+  last.className = 'row';
+  last.style.animationDelay = (reduce ? 0 : lines.length*0.19)+'s';
+  last.innerHTML = '<span class="k cu lead">&gt;</span><span class="v">ready. player 2 standing by<span class="caret"></span></span>';
+  body.appendChild(last);
+
+  var clock = $('#postClock');
+  function tick(){
+    var d = new Date();
+    clock.textContent = [d.getHours(),d.getMinutes(),d.getSeconds()].map(function(n){return String(n).padStart(2,'0')}).join(':');
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* ================= grid ================= */
+var state = {plat:'All', type:'All', q:''};
+
+function cardHTML(p){
+  var tagClass = p.tagType ? ' '+p.tagType : '';
+  return '<article class="card notch">'+
+    '<button type="button" class="card__hit" data-id="'+p.id+'" aria-label="View details for '+esc(p.name)+', '+inr(p.price)+'">'+
+      '<div class="card__art'+(p.img?' has-img':'')+'">'+artHTML(p)+
+        (p.tag?'<span class="card__tag'+tagClass+'">'+esc(p.tag)+'</span>':'')+
+        '<span class="card__plat">'+esc(p.plat==='Multi'?'All platforms':p.plat)+'</span>'+
+      '</div>'+
+      '<div class="card__body">'+
+        '<span class="card__cat">'+esc(p.type)+(p.genre?' · '+esc(p.genre):'')+'</span>'+
+        '<h3 class="card__name">'+esc(p.name)+'</h3>'+
+        '<p class="card__spec">'+esc(p.spec)+'</p>'+
+      '</div>'+
+    '</button>'+
+    '<div class="card__foot">'+
+      '<div class="price">'+inr(p.price)+(p.mrp?'<s>'+inr(p.mrp)+'</s>':'')+'</div>'+
+      '<button class="btn btn--sm" data-add="'+p.id+'" aria-label="Add '+esc(p.name)+' to cart">Add</button>'+
+    '</div>'+
+  '</article>';
+}
+
+function render(){
+  var q = state.q.trim().toLowerCase();
+  var list = PRODUCTS.filter(function(p){
+    var okP = state.plat === 'All' || p.plat === state.plat || p.plat === 'Multi';
+    var okT = state.type === 'All' || p.type === state.type;
+    var hay = (p.name+' '+p.spec+' '+p.type+' '+p.plat+' '+(p.genre||'')).toLowerCase();
+    return okP && okT && (!q || hay.indexOf(q) > -1);
+  });
+
+  var rl = $('#resultline');
+  var bits = [];
+  if(state.plat !== 'All') bits.push(state.plat);
+  if(state.type !== 'All') bits.push(state.type);
+  rl.innerHTML = 'Showing <b>'+list.length+'</b> product'+(list.length===1?'':'s')+
+                 (bits.length ? ' · '+esc(bits.join(' · ')) : '') +
+                 (q ? ' · matching "'+esc(state.q.trim())+'"' : '');
+
+  var grid = $('#grid');
+  grid.innerHTML = list.length
+    ? list.map(cardHTML).join('')
+    : '<div class="empty"><p>No products match those filters.</p><small>Clear a filter or try a shorter search — the full catalogue has '+PRODUCTS.length+' items.</small></div>';
+}
+render();
+
+function setChip(group, val){
+  $$('.chip[data-'+group+']').forEach(function(b){
+    b.setAttribute('aria-pressed', b.dataset[group] === val ? 'true' : 'false');
+  });
+  state[group] = val;
+  render();
+}
+$$('.chip[data-plat]').forEach(function(b){ b.addEventListener('click', function(){ setChip('plat', b.dataset.plat); }); });
+$$('.chip[data-type]').forEach(function(b){ b.addEventListener('click', function(){ setChip('type', b.dataset.type); }); });
+$('#q').addEventListener('input', function(e){ state.q = e.target.value; render(); });
+
+/* nav / slot / footer links that jump into a filtered store view */
+$$('a[data-plat],a[data-type]').forEach(function(a){
+  a.addEventListener('click', function(){
+    if(a.dataset.plat){ setChip('plat', a.dataset.plat); setChip('type','All'); }
+    if(a.dataset.type){ setChip('type', a.dataset.type); setChip('plat','All'); }
+  });
+});
+
+/* ================= cart ================= */
+var cart = [];
+var drawer = $('#drawer'), scrim = $('#scrim');
+function syncScrim(){ scrim.classList.toggle('on', drawer.classList.contains('on') || pdialog.classList.contains('on')); }
+function openCart(){ drawer.classList.add('on'); drawer.setAttribute('aria-hidden','false'); syncScrim(); }
+function closeCart(){ drawer.classList.remove('on'); drawer.setAttribute('aria-hidden','true'); syncScrim(); }
+$('#cartBtn').addEventListener('click', openCart);
+$('#closeCart').addEventListener('click', closeCart);
+scrim.addEventListener('click', function(){ closeCart(); closeProduct(); });
+
+/* ================= product detail dialog ================= */
+var pdialog = $('#pdialog');
+var pdLastFocus = null;
+function openProduct(id){
+  var p = find(id); if(!p) return;
+  pdLastFocus = document.activeElement;
+  $('#pdCat').textContent = p.type + (p.genre ? ' · ' + p.genre : '');
+  $('#pdTitle').textContent = p.name;
+  $('#pdSpec').textContent = p.spec;
+  $('#pdPlat').textContent = p.plat === 'Multi' ? 'All platforms' : p.plat;
+  $('#pdPrice').innerHTML = inr(p.price) + (p.mrp ? '<s>'+inr(p.mrp)+'</s>' : '');
+  $('#pdArt').innerHTML = artHTML(p);
+  $('#pdAdd').dataset.add = p.id;
+  pdialog.classList.add('on');
+  pdialog.setAttribute('aria-hidden','false');
+  syncScrim();
+  $('#pdClose').focus();
+}
+function closeProduct(){
+  if(!pdialog.classList.contains('on')) return;
+  pdialog.classList.remove('on');
+  pdialog.setAttribute('aria-hidden','true');
+  syncScrim();
+  if(pdLastFocus && pdLastFocus.focus) pdLastFocus.focus();
+}
+$('#pdClose').addEventListener('click', closeProduct);
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ closeCart(); closeMenu(); closeProduct(); return; }
+  if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card__hit')){
+    e.preventDefault(); e.target.click(); return;
+  }
+  if(e.key === 'Tab' && pdialog.classList.contains('on')){
+    var focusables = $$('button, [href], input, [tabindex]:not([tabindex="-1"])', pdialog);
+    if(!focusables.length) return;
+    var first = focusables[0], last = focusables[focusables.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+});
+
+var toastTimer;
+function toast(msg){
+  $('#toastMsg').textContent = msg;
+  var t = $('#toast'); t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('on'); }, 2600);
+}
+function add(id){
+  var p = find(id); if(!p) return;
+  var line = cart.filter(function(c){return c.id===id})[0];
+  if(line){ line.qty++; } else { cart.push({id:id, qty:1}); }
+  drawCart();
+  toast(p.name + ' added to cart');
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest ? e.target.closest('[data-add]') : null;
+  if(t){ add(t.dataset.add); return; }
+  var hit = e.target.closest ? e.target.closest('.card__hit') : null;
+  if(hit) openProduct(hit.dataset.id);
+});
+
+function drawCart(){
+  var list = $('#cartList'), foot = $('#cartFoot');
+  var total = cart.reduce(function(s,c){ return s + find(c.id).price * c.qty; }, 0);
+  var units = cart.reduce(function(s,c){ return s + c.qty; }, 0);
+  var badge = $('#cartCount');
+  badge.textContent = units;
+  badge.classList.toggle('on', units > 0);
+
+  if(!cart.length){
+    list.innerHTML = '<div class="drawer__empty">Your cart is empty.<br>Pick a platform and start filling it.</div>';
+    foot.hidden = true;
+    return;
+  }
+  foot.hidden = false;
+  list.innerHTML = cart.map(function(c){
+    var p = find(c.id);
+    return '<div class="line">'+
+      '<div class="line__art">'+svgFor(p.type,22)+'</div>'+
+      '<div>'+
+        '<div class="line__nm">'+esc(p.name)+'</div>'+
+        '<div class="line__meta">'+esc(p.plat==='Multi'?'All platforms':p.plat)+' · '+inr(p.price)+'</div>'+
+        '<div class="qty">'+
+          '<button data-q="-" data-id="'+p.id+'" aria-label="Reduce quantity">\u2212</button>'+
+          '<span>'+c.qty+'</span>'+
+          '<button data-q="+" data-id="'+p.id+'" aria-label="Increase quantity">+</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="line__rt">'+
+        '<div class="price">'+inr(p.price*c.qty)+'</div>'+
+        '<button class="line__rm" data-rm="'+p.id+'">Remove</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  var allDigital = cart.every(function(c){ return find(c.id).type === 'Digital'; });
+  var freeShip = allDigital || total > FREE_SHIP_ABOVE;
+  var shipCost = freeShip ? 0 : FLAT_SHIP;
+
+  var hint = $('#freehint');
+  if(!freeShip){
+    hint.hidden = false;
+    hint.textContent = 'Add ' + inr((FREE_SHIP_ABOVE + 1) - total) + ' more for free shipping';
+  } else { hint.hidden = true; }
+
+  $('#sub').textContent   = inr(total);
+  $('#ship').textContent  = allDigital ? 'No shipping — digital' : (freeShip ? 'Free' : inr(shipCost));
+  $('#grand').textContent = inr(total + shipCost);
+}
+drawCart();
+
+$('#cartList').addEventListener('click', function(e){
+  var q  = e.target.closest ? e.target.closest('[data-q]')  : null;
+  var rm = e.target.closest ? e.target.closest('[data-rm]') : null;
+  if(q){
+    var line = cart.filter(function(c){return c.id===q.dataset.id})[0];
+    if(!line) return;
+    line.qty += (q.dataset.q === '+' ? 1 : -1);
+    if(line.qty < 1) cart = cart.filter(function(c){return c.id!==line.id});
+    drawCart();
+  }
+  if(rm){
+    cart = cart.filter(function(c){return c.id!==rm.dataset.rm});
+    drawCart();
+    toast('Removed from cart');
+  }
+});
+$('#checkout').addEventListener('click', function(){
+  toast('Checkout not connected yet — wire this to your payment gateway');
+});
+
+/* ================= release countdown ================= */
+(function(){
+  var clock = $('#clock'); if(!clock) return;
+  var end = new Date(RELEASE_DATE);
+  function tick(){
+    var diff = end - new Date();
+    if(diff < 0) diff = 0;
+    var s = Math.floor(diff/1000);
+    var parts = [Math.floor(s/86400), Math.floor(s%86400/3600), Math.floor(s%3600/60), s%60];
+    ['[data-d]','[data-h]','[data-m]','[data-s]'].forEach(function(sel,i){
+      $(sel, clock).textContent = String(parts[i]).padStart(2,'0');
+    });
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* ================= newsletter ================= */
+$('#subBtn').addEventListener('click', function(){
+  var input = $('#email'), note = $('#subNote');
+  var v = input.value.trim();
+  note.classList.remove('err','good');
+  if(!v){ note.textContent = 'Enter an email address to sign up.'; note.classList.add('err'); input.focus(); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){ note.textContent = 'That address looks incomplete — check the @ and the domain.'; note.classList.add('err'); input.focus(); return; }
+  note.textContent = 'You\u2019re on the list. First email lands this week.';
+  note.classList.add('good');
+  input.value = '';
+  toast('Subscribed to release alerts');
+});
+$('#email').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('#subBtn').click(); });
+
+/* ================= mobile menu ================= */
+var nav = $('#nav'), burger = $('#burger');
+function closeMenu(){ nav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+burger.addEventListener('click', function(){
+  var open = nav.classList.toggle('open');
+  burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+$$('#nav a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+
+/* ================= reveal + spine ================= */
+if('IntersectionObserver' in window){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+  $$('.rv').forEach(function(el){ io.observe(el); });
+} else { $$('.rv').forEach(function(el){ el.classList.add('in'); }); }
+
+(function(){
+  var flow = $('#spineFlow'); if(!flow) return;
+  function update(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    flow.setAttribute('d','M17 0 L17 '+(p*1000).toFixed(1));
+  }
+  update();
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+})();
+
+/* ================= reticle ================= */
+(function(){
+  if(reduce) return;
+  if(!window.matchMedia('(pointer: fine)').matches) return;
+  var r = $('#reticle'), x=0, y=0, tx=0, ty=0, raf=null;
+  window.addEventListener('mousemove', function(e){
+    tx = e.clientX; ty = e.clientY;
+    r.classList.add('is-live');
+    var el = e.target;
+    var hot = (el && el.closest) ? el.closest('a,button,input,.card,.slot,.chip,[role="button"]') : null;
+    r.classList.toggle('is-hot', !!hot);
+    if(!raf) raf = requestAnimationFrame(loop);
+  }, {passive:true});
+  window.addEventListener('mouseout', function(e){ if(!e.relatedTarget) r.classList.remove('is-live'); });
+  function loop(){
+    x += (tx-x)*0.22; y += (ty-y)*0.22;
+    r.style.left = x+'px'; r.style.top = y+'px';
+    if(Math.abs(tx-x)>.4 || Math.abs(ty-y)>.4){ raf = requestAnimationFrame(loop); } else { raf = null; }
+  }
+})();
+
+})();
+</script>
+</body>
+</html>
